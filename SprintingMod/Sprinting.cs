@@ -24,7 +24,7 @@ namespace SprintingMod
 
         public override string Description
         {
-            get { return "Registers a command that allows for sprinting faster."; }
+            get { return "Allows the user to increase speed when pressing a button."; }
         }
 
         private static int sprintingSpeed = 3;
