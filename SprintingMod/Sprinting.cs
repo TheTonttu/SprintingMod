@@ -1,10 +1,7 @@
-﻿using StardewModdingAPI;
+﻿using Microsoft.Xna.Framework.Input;
+using StardewModdingAPI;
 using StardewValley;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SprintingMod
 {
@@ -30,12 +27,29 @@ namespace SprintingMod
             get { return "Registers a command that allows for sprinting faster."; }
         }
 
-        private static Int32 sprintingSpeed = 1;
+        private static Int32 sprintingSpeed = 2;
         private static bool sprint;
 
         public override void Entry(params object[] objects)
         {
-            base.Entry(objects);
+            KeyboardInput.KeyDown += KeyboardInput_KeyDown;
+            KeyboardInput.KeyUp += KeyboardInput_KeyUp;
+        }
+
+        private void KeyboardInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.LeftControl)
+            {
+                player_sprint();
+            }
+        }
+
+        private void KeyboardInput_KeyUp(object sender, KeyEventArgs e)
+        {
+            if(e.KeyCode == Keys.LeftControl)
+            {
+                player_walk();
+            }
         }
 
         static void player_sprint()
