@@ -1,7 +1,6 @@
-﻿using Microsoft.Xna.Framework.Input;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using StardewValley;
-using System;
+using StardewValley.Menus;
 
 namespace SprintingMod
 {
@@ -27,15 +26,25 @@ namespace SprintingMod
             get { return "Allows the user to increase speed when pressing a button."; }
         }
 
-        private static int sprintingSpeed = 3;
+        private static int sprintingSpeed = 1;
         private static string sprintingButton = "17";
         private const string _debuggerInfo = "[SprintingMod INFO] ";
 
         public override void Entry(params object[] objects)
         {
+            Program.LogInfo(_debuggerInfo + "Getting settings from SprintingMod.ini file.");
+            UpdateSettings();
             Program.LogInfo(_debuggerInfo + "Initializing KeyboardInput listeners.");
             KeyboardInput.KeyDown += KeyboardInput_KeyDown;
             KeyboardInput.KeyUp += KeyboardInput_KeyUp;
+        }
+
+        private void UpdateSettings()
+        {
+            var parser = new IniFileReader();
+            var settings = parser.GetSettings("SprintingMod.ini");
+            sprintingSpeed = settings["SprintSpeed"].AsInt32();
+            sprintingButton = settings["KeyToPress"];
         }
 
         private void KeyboardInput_KeyDown(object sender, KeyEventArgs e)
