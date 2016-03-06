@@ -27,18 +27,20 @@ namespace SprintingMod
             get { return "Registers a command that allows for sprinting faster."; }
         }
 
-        private static Int32 sprintingSpeed = 2;
-        private static bool sprint;
+        private static int sprintingSpeed = 3;
+        private static string sprintingButton = "17";
+        private const string _debuggerInfo = "[SprintingMod INFO] ";
 
         public override void Entry(params object[] objects)
         {
+            Program.LogInfo(_debuggerInfo + "Initializing KeyboardInput listeners.");
             KeyboardInput.KeyDown += KeyboardInput_KeyDown;
             KeyboardInput.KeyUp += KeyboardInput_KeyUp;
         }
 
         private void KeyboardInput_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.LeftControl)
+            if (e.KeyCode.ToString() == sprintingButton)
             {
                 player_sprint();
             }
@@ -46,7 +48,7 @@ namespace SprintingMod
 
         private void KeyboardInput_KeyUp(object sender, KeyEventArgs e)
         {
-            if(e.KeyCode == Keys.LeftControl)
+            if (e.KeyCode.ToString() == sprintingButton)
             {
                 player_walk();
             }
