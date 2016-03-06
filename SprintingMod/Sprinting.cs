@@ -26,7 +26,7 @@ namespace SprintingMod
             get { return "Allows the user to increase speed when pressing a button."; }
         }
 
-        private static int sprintingSpeed = 1;
+        private static int sprintingSpeed = 3;
         private static string sprintingButton = "17";
         private const string _debuggerInfo = "[SprintingMod INFO] ";
 
@@ -43,8 +43,11 @@ namespace SprintingMod
         {
             var parser = new IniFileReader();
             var settings = parser.GetSettings("SprintingMod.ini");
-            sprintingSpeed = settings["SprintSpeed"].AsInt32();
-            sprintingButton = settings["KeyToPress"];
+            if(settings != null)
+            {
+                sprintingSpeed = settings["SprintSpeed"].AsInt32();
+                sprintingButton = settings["KeyToPress"];
+            }
         }
 
         private void KeyboardInput_KeyDown(object sender, KeyEventArgs e)
