@@ -6,26 +6,29 @@ namespace SprintingMod
     public class IniFileReader
     {
         private const string _IniFileReaderInfo = "[SprintingMod IniFileReader INFO] ";
+
+        /// <summary>
+        /// Parses an INI file; ignoring sections, newlines, pound signs, and semi-colons.
+        /// </summary>
+        /// <param name="fileName">
+        /// A <see cref="string"/> that represents the name of the file.
+        /// </param>
+        /// <returns>
+        /// If <paramref name="fileName"/> exists, returns list of key value pairs; otherwise returns an empty <see cref="Dictionary{string, string}"/>
+        /// </returns>
         public Dictionary<string, string> GetSettings(string fileName)
         {
             StreamReader configReader;
             string line = "";
             Dictionary<string, string> settings = new Dictionary<string, string>();
-            try
+
+            if (!File.Exists(fileName))
             {
-                configReader = File.OpenText(fileName);
+                StardewModdingAPI.Log.Info(_IniFileReaderInfo + fileName + " does not exist. Returning empty dictionary.");
+                return settings;
             }
-            catch
-            {
-                StardewModdingAPI.Program.LogInfo(_IniFileReaderInfo + "SprintingMod.ini file does not exist. Using default settings.");
-                return null;
-                //StreamWriter configWriter = new StreamWriter(fileName);
-                //configWriter.WriteLine("[Settings]");
-                //configWriter.WriteLine("SprintSpeed = 3");
-                //configWriter.WriteLine("KeyToPress = 17");
-                //configWriter.Close();
-                //configReader = File.OpenText(fileName);
-            }
+
+            configReader = File.OpenText(fileName);
 
             while ((line = configReader.ReadLine()) != null)
             {

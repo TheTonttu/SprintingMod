@@ -1,4 +1,5 @@
 ﻿using StardewModdingAPI;
+using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Menus;
 
@@ -27,24 +28,34 @@ namespace SprintingMod
         }
 
         private static int sprintingSpeed = 3;
+        private static int currentSprintingSpeed = 0;
         private static string sprintingButton = "17";
         private const string _debuggerInfo = "[SprintingMod INFO] ";
 
         public override void Entry(params object[] objects)
         {
-            Program.LogInfo(_debuggerInfo + "Getting settings from SprintingMod.ini file.");
+            Log.Info(_debuggerInfo + "Getting settings from SprintingMod.ini file.");
             UpdateSettings();
-            Program.LogInfo(_debuggerInfo + "Initializing KeyboardInput listeners.");
+            Log.Info(_debuggerInfo + "Initializing KeyboardInput listeners.");
             KeyboardInput.KeyDown += KeyboardInput_KeyDown;
             KeyboardInput.KeyUp += KeyboardInput_KeyUp;
+
+            GameEvents.GameLoaded += GameEvents_GameLoaded;
+            
+        }
+
+        private void GameEvents_GameLoaded(object sender, System.EventArgs e)
+        {
+            currentSprintingSpeed = Game1.player.speed;
         }
 
         private void UpdateSettings()
         {
             var parser = new IniFileReader();
             var settings = parser.GetSettings("SprintingMod.ini");
-            if(settings != null)
+            if(settings != null && settings.Count > 1)
             {
+                Log.Info(_debuggerInfo + "Applying settings from ini file.");
                 sprintingSpeed = settings["SprintSpeed"].AsInt32();
                 sprintingButton = settings["KeyToPress"];
             }
@@ -73,7 +84,7 @@ namespace SprintingMod
         
         static void player_walk()
         {
-            Game1.player.addedSpeed = 0;
+            Game1.player.addedSpeed = currentSprintingSpeed;
         }
     }
 }
