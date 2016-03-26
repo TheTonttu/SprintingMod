@@ -2,7 +2,6 @@
 using StardewModdingAPI.Inheritance;
 using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.Menus;
 using System;
 
 namespace SprintingMod
@@ -17,7 +16,6 @@ namespace SprintingMod
         public override void Entry(params object[] objects)
         {
             Config = new SprintingModConfig().InitializeConfig(BaseConfigPath);
-            Log.Info(_debuggerInfo + "Initializing buff with drain and rate: " + Config.StaminaDrain + "/" + Config.StaminaDrainRate);
             BuffInit();
             KeyboardInput.KeyDown += KeyboardInput_KeyDown;
             KeyboardInput.KeyUp += KeyboardInput_KeyUp;
@@ -29,13 +27,18 @@ namespace SprintingMod
 
         private void BuffInit()
         {
-            SprintingBuff = new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, Config.SprintSpeed, 0, 0, 1200, "Sprint Mod");
+            SprintingBuff = new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, Config.SprintSpeed, 0, 0, 1000, "Sprint Mod");
             SprintingBuff.which = Buff.speed;
             SprintingBuff.sheetIndex = Buff.speed;
         }
 
         private void GameEvents_OneSecondTick(object sender, EventArgs e)
         {
+            if (SprintingBuff_Exists())
+            {
+                SGame.buffsDisplay.otherBuffs[SGame.buffsDisplay.otherBuffs.IndexOf(SprintingBuff)].millisecondsDuration = 5555;
+            }
+            
             if (SGame.player.isMoving() && SprintingBuff_Exists())
             {
                 timeSinceLastDrain += 1;
@@ -75,7 +78,7 @@ namespace SprintingMod
 
         private void ControllerButtonPressed(object sender, EventArgsControllerButtonPressed e)
         {
-            if (e.ButtonPressed.ToString().Equals(Config.SprintKey))
+            if (e.ButtonPressed.ToString().Equals(Config.SprintKeyForControllers))
             {
                 if (Config.HoldToSprint)
                     Player_Sprint();
@@ -86,7 +89,7 @@ namespace SprintingMod
 
         private void ControllerButtonReleased(object sender, EventArgsControllerButtonReleased e)
         {
-            if (e.ButtonReleased.ToString().Equals(Config.SprintKey))
+            if (e.ButtonReleased.ToString().Equals(Config.SprintKeyForControllers))
             {
                 if (Config.HoldToSprint)
                 {
