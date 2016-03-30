@@ -3,18 +3,28 @@ using StardewModdingAPI.Inheritance;
 using StardewModdingAPI.Events;
 using StardewValley;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
 namespace SprintingMod
 {
     public class Sprinting : Mod
     {
         public static SprintingModConfig Config { get; set; }
+
         private const string _debuggerInfo = "[SprintingMod INFO] ";
+        private const string modConflicts = "MovementMod";
+
         private Buff SprintingBuff { get; set; }
         private int timeSinceLastDrain = 0;
+        private bool ZorynsMovementModExists = false;
+        private bool defaultSpeedSet = false;
+        private int defaultPlayerSpeed = 0;
 
         public override void Entry(params object[] objects)
         {
+            FindConflicts();
             Config = new SprintingModConfig().InitializeConfig(BaseConfigPath);
             BuffInit();
             KeyboardInput.KeyDown += KeyboardInput_KeyDown;
@@ -22,7 +32,21 @@ namespace SprintingMod
             ControlEvents.ControllerButtonPressed += ControllerButtonPressed;
             ControlEvents.ControllerButtonReleased += ControllerButtonReleased;
             GameEvents.OneSecondTick += GameEvents_OneSecondTick;
-            
+            GameEvents.UpdateTick += GameEvents_UpdateTick;
+        }
+
+        private void FindConflicts()
+        {
+            var modPaths = new List<string>();
+            modPaths.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "StardewValley", "Mods"));
+            modPaths.Add(Path.Combine(Constants.ExecutionPath, "Mods"));
+            foreach(var path in modPaths)
+            {
+                if (Directory.Exists(Path.Combine(path, modConflicts)))
+                {
+                    ZorynsMovementModExists = true;
+                }
+            }
         }
 
         private void BuffInit()
@@ -30,6 +54,14 @@ namespace SprintingMod
             SprintingBuff = new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, Config.SprintSpeed, 0, 0, 1000, "Sprint Mod");
             SprintingBuff.which = Buff.speed;
             SprintingBuff.sheetIndex = Buff.speed;
+        }
+
+        private void GameEvents_UpdateTick(object sender, EventArgs e)
+        {
+            if(SprintingBuff_Exists() && ZorynsMovementModExists)
+            {
+                SprintingBuff.addBuff();
+            }
         }
 
         private void GameEvents_OneSecondTick(object sender, EventArgs e)
@@ -130,7 +162,7 @@ namespace SprintingMod
 
         private bool SprintingBuff_Exists()
         {
-            if (SprintingBuff == null)
+            if (SprintingBuff == null || SGame.buffsDisplay == null)
                 return false;
 
             return SGame.buffsDisplay.otherBuffs.Contains(SprintingBuff);
