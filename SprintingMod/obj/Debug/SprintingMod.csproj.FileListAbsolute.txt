@@ -1,11 +1,6 @@
+F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\obj\Debug\SprintingMod.csproj.CoreCompileInputs.cache
 F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\bin\Debug\SprintingMod.dll
 F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\bin\Debug\SprintingMod.pdb
-F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\bin\Debug\Microsoft.Xna.Framework.dll
-F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\bin\Debug\Stardew Valley.exe
-F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\bin\Debug\StardewModdingAPI.exe
-F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\bin\Debug\xTile.dll
-F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\bin\Debug\Lidgren.Network.dll
-F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\bin\Debug\Steamworks.NET.dll
 F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\obj\Debug\SprintingMod.csprojResolveAssemblyReference.cache
 F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\obj\Debug\SprintingMod.dll
 F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\obj\Debug\SprintingMod.pdb
