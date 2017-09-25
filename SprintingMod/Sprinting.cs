@@ -1,11 +1,9 @@
 ﻿using StardewModdingAPI;
-using StardewModdingAPI.Inheritance;
 using StardewModdingAPI.Events;
 using StardewValley;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace SprintingMod
 {
@@ -22,10 +20,10 @@ namespace SprintingMod
         private bool defaultSpeedSet = false;
         private int defaultPlayerSpeed = 0;
 
-        public override void Entry(params object[] objects)
+        public override void Entry(IModHelper helper)
         {
             FindConflicts();
-            Config = new SprintingModConfig().InitializeConfig(BaseConfigPath);
+            Config = helper.ReadConfig<SprintingModConfig>();
             BuffInit();
             KeyboardInput.KeyDown += KeyboardInput_KeyDown;
             KeyboardInput.KeyUp += KeyboardInput_KeyUp;
@@ -40,7 +38,7 @@ namespace SprintingMod
             var modPaths = new List<string>();
             modPaths.Add(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "StardewValley", "Mods"));
             modPaths.Add(Path.Combine(Constants.ExecutionPath, "Mods"));
-            foreach(var path in modPaths)
+            foreach (var path in modPaths)
             {
                 if (Directory.Exists(Path.Combine(path, modConflicts)))
                 {
@@ -51,14 +49,14 @@ namespace SprintingMod
 
         private void BuffInit()
         {
-            SprintingBuff = new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, Config.SprintSpeed, 0, 0, 1000, "Sprint Mod");
+            SprintingBuff = new Buff(0, 0, 0, 0, 0, 0, 0, 0, 0, Config.SprintSpeed, 0, 0, 1000, "SprintMod", "Sprint Mod");
             SprintingBuff.which = Buff.speed;
             SprintingBuff.sheetIndex = Buff.speed;
         }
 
         private void GameEvents_UpdateTick(object sender, EventArgs e)
         {
-            if(SprintingBuff_Exists() && ZorynsMovementModExists)
+            if (SprintingBuff_Exists() && ZorynsMovementModExists)
             {
                 SprintingBuff.addBuff();
             }
@@ -68,15 +66,15 @@ namespace SprintingMod
         {
             if (SprintingBuff_Exists())
             {
-                SGame.buffsDisplay.otherBuffs[SGame.buffsDisplay.otherBuffs.IndexOf(SprintingBuff)].millisecondsDuration = 5555;
+                Game1.buffsDisplay.otherBuffs[Game1.buffsDisplay.otherBuffs.IndexOf(SprintingBuff)].millisecondsDuration = 5555;
             }
-            
-            if (SGame.player.isMoving() && SprintingBuff_Exists())
+
+            if (Game1.player.isMoving() && SprintingBuff_Exists())
             {
                 timeSinceLastDrain += 1;
                 if (timeSinceLastDrain >= Config.StaminaDrainRate)
                 {
-                    SGame.player.Stamina -= Config.StaminaDrain;
+                    Game1.player.Stamina -= Config.StaminaDrain;
                     timeSinceLastDrain = 0;
                 }
             }
@@ -133,16 +131,16 @@ namespace SprintingMod
         private void Player_Sprint()
         {
             if (!SprintingBuff_Exists())
-                SGame.buffsDisplay.addOtherBuff(SprintingBuff);
+                Game1.buffsDisplay.addOtherBuff(SprintingBuff);
         }
-        
+
         private void Player_Walk()
         {
             if (SprintingBuff_Exists())
             {
-                SGame.buffsDisplay.otherBuffs.Remove(SprintingBuff);
+                Game1.buffsDisplay.otherBuffs.Remove(SprintingBuff);
                 SprintingBuff.removeBuff();
-                SGame.buffsDisplay.syncIcons();
+                Game1.buffsDisplay.syncIcons();
             }
         }
 
@@ -150,26 +148,26 @@ namespace SprintingMod
         {
             if (SprintingBuff_Exists())
             {
-                SGame.buffsDisplay.otherBuffs.Remove(SprintingBuff);
+                Game1.buffsDisplay.otherBuffs.Remove(SprintingBuff);
                 SprintingBuff.removeBuff();
-                SGame.buffsDisplay.syncIcons();
+                Game1.buffsDisplay.syncIcons();
             }
             else
             {
-                SGame.buffsDisplay.addOtherBuff(SprintingBuff);
+                Game1.buffsDisplay.addOtherBuff(SprintingBuff);
             }
         }
 
         private bool SprintingBuff_Exists()
         {
-            if (SprintingBuff == null || SGame.buffsDisplay == null)
+            if (SprintingBuff == null || Game1.buffsDisplay == null)
                 return false;
 
-            return SGame.buffsDisplay.otherBuffs.Contains(SprintingBuff);
+            return Game1.buffsDisplay.otherBuffs.Contains(SprintingBuff);
         }
     }
 
-    public class SprintingModConfig : Config
+    public class SprintingModConfig
     {
         public bool HoldToSprint { get; set; }
         public int SprintSpeed { get; set; }
@@ -178,7 +176,7 @@ namespace SprintingMod
         public int StaminaDrainRate { get; set; }
         public string SprintKeyForControllers { get; set; }
 
-        public override T GenerateDefaultConfig<T>()
+        public SprintingModConfig()
         {
             HoldToSprint = true;
             SprintSpeed = 3;
@@ -186,7 +184,6 @@ namespace SprintingMod
             SprintKeyForControllers = "LeftStick";
             StaminaDrain = 1;
             StaminaDrainRate = 5;
-            return this as T;
         }
     }
 }
