@@ -8,5 +8,6 @@
     "Build": ""
   },
   "Description": "Allows player to sprint with (or without) stamina drain on key press and hold with the option of key toggle.",
+  "UniqueID": "Patrick.SprintingMod",
   "EntryDll": "SprintingMod.dll"
 }
