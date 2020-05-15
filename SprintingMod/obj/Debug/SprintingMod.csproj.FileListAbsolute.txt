@@ -1,6 +1,0 @@
-F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\obj\Debug\SprintingMod.csproj.CoreCompileInputs.cache
-F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\bin\Debug\SprintingMod.dll
-F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\bin\Debug\SprintingMod.pdb
-F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\obj\Debug\SprintingMod.csprojResolveAssemblyReference.cache
-F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\obj\Debug\SprintingMod.dll
-F:\Dev\StardewValleyMods\SprintingMod\SprintingMod\obj\Debug\SprintingMod.pdb
