@@ -1,12 +1,7 @@
 ﻿{
   "Name": "Sprinting Mod",
   "Author": "Patrick",
-  "Version": {
-    "MajorVersion": 2,
-    "MinorVersion": 0,
-    "PatchVersion": 0,
-    "Build": ""
-  },
+  "Version": "2.0.0",
   "Description": "Allows player to sprint with (or without) stamina drain on key press and hold with the option of key toggle.",
   "UniqueID": "Patrick.SprintingMod",
   "EntryDll": "SprintingMod.dll",
